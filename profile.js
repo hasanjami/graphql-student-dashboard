@@ -1,11 +1,13 @@
 // Helper function to safely make HTTP requests.
 // It checks for errors and tries to parse the response as JSON, or falls back to text.
-function safeFetch(url, options) {
-    return fetch(url, options)
-        .then(res => {
-            if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
-            return res.json().catch(() => res.text());
-        });
+async function safeFetch(url, options) {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+        const error = new Error('Network response was not ok: ' + response.status);
+        error.status = response.status;
+        throw error;
+    }
+    return response.json();
 }
 
 // Checks if the user is authenticated by looking for a JWT token in sessionStorage.
@@ -152,7 +154,7 @@ async function fetchProfile() {
     } catch (error) {
         console.error('Error in fetchProfile:', error);
         // If authentication fails, clear token and redirect to login.
-        if (error.message.includes('Network error') || error.message.includes('No user data')) {
+        if (error.status === 401 || error.status === 403 || error.message.includes('No user data')) {
 
             sessionStorage.removeItem('jwt');
             window.location.href = 'login.html';
@@ -273,7 +275,7 @@ async function displayUserData(data) {
     const userSkills = data.progressionSkill[0] ? data.progressionSkill[0].transactions : [];
     // Show user name and login.
     document.getElementById('user-info').innerHTML = `
-        <h2>Welcome, ${user.attrs.firstName || ''} ${user.attrs.lastName || ''} (${user.login})!</h2> 
+        <h2>Welcome, ${user.attrs.firstName || ''} ${user.attrs.lastName || ''} (${user.login})!</h2>
     `;
     const userIcon = document.createElement('img');
     userIcon.classList.add('user-icon'); // Add any desired classes here for styling

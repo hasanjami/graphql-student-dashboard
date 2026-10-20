@@ -1,9 +1,17 @@
-function safeFetch(url, options) {
-    return fetch(url, options)
-        .then(res => {
-            if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
-            return res.json().catch(() => res.text());
-        });
+async function safeFetch(url, options) {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+        const error = new Error('Authentication request failed');
+        error.status = response.status;
+        throw error;
+    }
+
+    const text = await response.text();
+    try {
+        return JSON.parse(text);
+    } catch {
+        return text;
+    }
 }
 
 
@@ -29,18 +37,7 @@ document.getElementById('loginForm').addEventListener('submit', async(e) => {
         });
 
 
-        let data;
-        if (typeof response === 'string') {
-            try {
-                data = JSON.parse(response);
-            } catch {
-                data = {};
-            }
-        } else {
-            data = response;
-        }
-
-        const token = data.token || data;
+        const token = typeof response === 'string' ? response : response?.token;
 
         if (!token || typeof token !== 'string') {
             throw new Error('No token received from server');
@@ -59,8 +56,9 @@ document.getElementById('loginForm').addEventListener('submit', async(e) => {
         window.location.replace('profile.html');
 
     } catch (error) {
-        console.error('Login error:', error);
         errorDiv.style.display = 'block';
-        errorDiv.textContent = 'Invalid username or password';
+        errorDiv.textContent = error.status === 401 || error.status === 403
+            ? 'Invalid username or password'
+            : 'Unable to sign in. Please check your connection and try again.';
     }
 });
