@@ -1,0 +1,100 @@
+/* Sea theme stylesheet - Beginner-friendly
+   - Soft ocean gradients
+   - Rounded cards, calm spacing
+   - Easy-to-edit variables at top
+*/
+:root{
+  --sea-deep: #036b8a;
+  --sea-mid: #0296c6;
+  --sea-light: #9ae3ff;
+  --sand: #f6e7c3;
+  --card-bg: rgba(255,255,255,0.95);
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(180deg, var(--sea-light) 0%, #dff6ff 25%, #e9f9ff 50%);
+  color:#033047;
+  -webkit-font-smoothing:antialiased;
+  padding:22px;
+  line-height:1.45;
+}
+
+/* Header with simple wave using SVG background */
+.header-sea {
+  background: linear-gradient(90deg, var(--sea-deep), var(--sea-mid));
+  color: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(2,22,34,0.18);
+  position: relative;
+  overflow: hidden;
+}
+.header-sea h1 { margin: 0; font-size: 20px; letter-spacing: .4px; }
+.header-sea p { margin:4px 0 0 0; opacity:0.95; font-size:13px; }
+
+/* Simple decorative wave at bottom of header */
+.header-sea::after{
+  content: "";
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -36px;
+  height: 70px;
+  background: radial-gradient(circle at 20% 60%, rgba(255,255,255,0.12), transparent 20%),
+              radial-gradient(circle at 80% 40%, rgba(255,255,255,0.08), transparent 25%);
+  border-radius: 50%;
+  transform: translateY(10px);
+  opacity: 0.95;
+}
+
+/* Container & cards */
+.container { max-width:1000px; margin: 18px auto; }
+.card {
+  background: var(--card-bg);
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(1,31,46,0.06);
+  margin-bottom: 14px;
+}
+
+/* Buttons and inputs */
+button {
+  background: linear-gradient(180deg, var(--sea-mid), var(--sea-deep));
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(2,22,34,0.12);
+}
+button.secondary {
+  background: transparent;
+  color: var(--sea-deep);
+  border: 1px solid rgba(2,22,34,0.06);
+}
+
+/* Form controls */
+input, select, textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(2,22,34,0.08);
+  width:100%;
+  margin-top:6px;
+}
+
+/* Table style */
+table{width:100%; border-collapse:collapse;}
+th, td{padding:8px; text-align:left; border-bottom:1px solid rgba(2,22,34,0.04);}
+
+/* Footer */
+footer { text-align:center; color: rgba(3,48,71,0.6); font-size:13px; margin-top:10px; }
+
+/* Small responsive tweaks */
+@media (max-width:640px){
+  .header-sea h1{font-size:18px;}
+  body{padding:12px;}
+}
